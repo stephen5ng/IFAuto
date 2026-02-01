@@ -72,6 +72,13 @@ class MinimapView(context: Context, attrs: AttributeSet) : View(context, attrs) 
              invalidate()
         }
     }
+
+    fun clear() {
+        nodes.clear()
+        edges.clear()
+        currentId = -1
+        invalidate()
+    }
     
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)

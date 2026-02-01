@@ -27,6 +27,9 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var speechRecognizer: SpeechRecognizer? = null
     private var isListenting = false
     private var lastMove: String? = null
+    
+    private var currentStory = "zork1.z3"
+    private val stories = listOf("zork1.z3", "lostpig.z8")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +46,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         checkPermissionsAndSetupMic()
 
         micButton.setOnClickListener { startListening() }
+        findViewById<Button>(R.id.switchGameButton).setOnClickListener { switchGame() }
         setupActionButtons()
     }
     
@@ -67,7 +71,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             speak(output)
             updateMap()
             
-            val savePath = java.io.File(filesDir, "autosave.sav").absolutePath
+            val savePath = java.io.File(filesDir, "$currentStory.sav").absolutePath
             zEngine?.saveGame(savePath)
         }
     }
@@ -158,16 +162,16 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private fun initZEngine() {
         try {
-            val stream = assets.open("zork1.z3")
+            val stream = assets.open(currentStory)
             zEngine = ZEngineWrapper(stream)
             
-            val savePath = java.io.File(filesDir, "autosave.sav").absolutePath
+            val savePath = java.io.File(filesDir, "$currentStory.sav").absolutePath
             val saveFile = java.io.File(savePath)
 
             var output = ""
             if (saveFile.exists()) {
                 if (zEngine?.restoreGame(savePath) == true) {
-                    appendOutput("\n(Restored Session)\n")
+                    appendOutput("\n(Restored $currentStory Session)\n")
                     // Inject "Look" so the user sees where they are
                     zEngine?.input("Look") 
                     output = zEngine?.run() ?: ""
@@ -184,13 +188,30 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             updateMap()
             
         } catch (e: Exception) {
-            appendOutput("Error: ${e.message}")
+            appendOutput("Error Loading $currentStory: ${e.message}")
         }
+    }
+
+    private fun switchGame() {
+        // Save current game state
+        val savePath = java.io.File(filesDir, "$currentStory.sav").absolutePath
+        zEngine?.saveGame(savePath)
+        
+        // Cycle to next story
+        val nextIndex = (stories.indexOf(currentStory) + 1) % stories.size
+        currentStory = stories[nextIndex]
+        
+        // Reset UI
+        outputTextView.text = ""
+        minimapView.clear()
+        
+        // Re-init
+        initZEngine()
     }
 
     override fun onStop() {
         super.onStop()
-        val savePath = java.io.File(filesDir, "autosave.sav").absolutePath
+        val savePath = java.io.File(filesDir, "$currentStory.sav").absolutePath
         zEngine?.saveGame(savePath)
     }
 

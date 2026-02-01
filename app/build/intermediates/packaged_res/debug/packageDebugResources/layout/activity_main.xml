@@ -143,6 +143,13 @@
                 android:text="Down"
                 android:layout_marginEnd="8dp"/>
 
+            <Button
+                android:id="@+id/switchGameButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Switch Game"
+                android:backgroundTint="#FF5722"/>
+
         </LinearLayout>
     </HorizontalScrollView>
 

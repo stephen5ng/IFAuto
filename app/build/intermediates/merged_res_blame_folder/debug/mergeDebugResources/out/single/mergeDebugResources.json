@@ -24,6 +24,10 @@
         "source": "/Users/stephenng/.gradle/daemon/9.1.0/com.example.ifauto.app-main-36:/drawable/ic_launcher_foreground.xml"
     },
     {
+        "merged": "/Users/stephenng/.gradle/daemon/9.1.0/com.example.ifauto.app-debug-34:/drawable_rounded_bg.xml.flat",
+        "source": "/Users/stephenng/.gradle/daemon/9.1.0/com.example.ifauto.app-main-36:/drawable/rounded_bg.xml"
+    },
+    {
         "merged": "/Users/stephenng/.gradle/daemon/9.1.0/com.example.ifauto.app-debug-34:/xml_automotive_app_desc.xml.flat",
         "source": "/Users/stephenng/.gradle/daemon/9.1.0/com.example.ifauto.app-main-36:/xml/automotive_app_desc.xml"
     },
@@ -32,7 +36,7 @@
         "source": "/Users/stephenng/.gradle/daemon/9.1.0/com.example.ifauto.app-main-36:/xml/backup_rules.xml"
     },
     {
-        "merged": "com.example.ifauto.app-debug-34:/drawable_rounded_bg.xml.flat",
-        "source": "com.example.ifauto.app-main-36:/drawable/rounded_bg.xml"
+        "merged": "com.example.ifauto.app-debug-34:/layout_activity_main.xml.flat",
+        "source": "com.example.ifauto.app-main-36:/layout/activity_main.xml"
     }
 ]

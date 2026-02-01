@@ -16,6 +16,7 @@ id micButton
 id minimapView
 id outputTextView
 id scrollView
+id switchGameButton
 layout activity_main
 mipmap ic_launcher
 mipmap ic_launcher_round
