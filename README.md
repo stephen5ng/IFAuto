@@ -41,3 +41,18 @@ Android Auto has strict safety requirements. To run this app (which is currently
 - **Voice Output**: Uses Android's Text-to-Speech (TTS) to narrate the story.
 - **Voice Commands**: "Look", "North", "Open Mailbox", etc., work via voice or the car's screen.
 - **JSON Engine**: A fallback engine for simple, custom-scripted stories.
+
+## Attribution
+
+The Z-Machine interpreter (`zengine/` directory) is based on [TextFiction](https://github.com/onyxbits/TextFiction) by Onyxbits, used under the **Artistic License 2.0**.
+
+**Changes made for IFAuto:**
+- Adapted package structure for Android/Gradle integration
+- Added array bounds safety checks in `ZState.java`
+- Fixed instruction implementations in `ZInstruction5.java` for improved stability
+
+See the git history for detailed changes:
+- **Commit `cd6b148`**: Original TextFiction code (unmodified except package name)
+- **Commit `ceb5400`**: IFAuto-specific modifications
+
+A fork of TextFiction is maintained at [stephen5ng/TextFiction](https://github.com/stephen5ng/TextFiction) for reference.
