@@ -746,7 +746,7 @@ public class ZInstruction5 extends ZInstruction {
 
 	protected short op_encode_text() {
 		short encword[];
-		int ascii_text = operands[0] & 0xFFFF + operands[2];
+		int ascii_text = (operands[0] & 0xFFFF) + operands[2];
 		int coded_text = operands[3] & 0xFFFF;
 		int i;
 
@@ -767,107 +767,95 @@ public class ZInstruction5 extends ZInstruction {
 		if (second == 0) {
 			if (length < 0)
 				length = -length;
-			for (i = first + length - 1; i >= first; i--)
-				zm.memory_image[i] = 0;
+			for (i = 0; i < length; i++)
+				zm.memory_image[first + i] = 0;
+		}
+		else if (length < 0) {
+			length = -length;
+			for (i = 0; i < length; i++)
+				zm.memory_image[second + i] = zm.memory_image[first + i];
 		}
 		else {
-			if (length > 0)
-				System.arraycopy(zm.memory_image, first, zm.memory_image, second,
-						length);
-			else {
-				length = -length;
-				for (i = 0; i < length; i++) {
-					zm.memory_image[second + i] = zm.memory_image[first + i];
-				}
-			}
+			System.arraycopy(zm.memory_image, first, zm.memory_image, second, length);
 		}
 		return ZFALSE;
 	}
 
 	protected short op_print_table() {
-		int textpos = operands[0] & 0xFFFF;
+		int table = operands[0] & 0xFFFF;
 		int width = operands[1] & 0xFFFF;
 		int height = 1;
-		int skip = 0;
 		int i, j;
-		int x, y;
 
 		if (count > 2)
 			height = operands[2] & 0xFFFF;
 
-		if (count > 3)
-			skip = operands[3] & 0xFFFF;
-
-		/* TODO */
-		zm.current_window.flush();
-		x = zm.current_window.getx();
-		y = zm.current_window.gety();
-		for (j = 0; j < height; j++) {
-			zm.current_window.movecursor(x, y + j);
-			for (i = 0; i < width; i++) {
-				zm.print_ascii_char(zm.memory_image[textpos++]);
+		for (i = 0; i < height; i++) {
+			for (j = 0; j < width; j++) {
+				zm.print_ascii_char((short) (zm.memory_image[table + i * width + j] & 0xFF));
 			}
-			textpos += skip;
+			if (i < height - 1)
+				zm.current_window.newline();
 		}
 		return ZFALSE;
 	}
 
 	protected short op_check_arg_count() {
-		if (((operands[0] & 0xFFFF) - 1) < ((ZMachine5) zm).argcount)
+		if (operands[0] <= ((ZMachine5) zm).argcount)
 			return ZTRUE;
+		else
+			return ZFALSE;
+	}
+
+	protected short op_save() {
+		/* TODO */
+		return ZFALSE;
+	}
+
+	protected short op_restore() {
+		/* TODO */
 		return ZFALSE;
 	}
 
 	protected short op_log_shift() {
-		if (operands[1] >= 0)
-			return (short) ((operands[0] & 0xFFFF) << operands[1]);
+		int number = operands[0] & 0xFFFF;
+		int places = operands[1];
+		if (places > 0)
+			return (short) (number << places);
 		else
-			return (short) ((operands[0] & 0xFFFF) >> -operands[1]);
+			return (short) (number >>> -places);
 	}
 
 	protected short op_art_shift() {
-		if (operands[1] >= 0)
-			return (short) (operands[0] << operands[1]);
+		short number = operands[0];
+		int places = operands[1];
+		if (places > 0)
+			return (short) (number << places);
 		else
-			return (short) (operands[0] << -operands[1]);
+			return (short) (number >> -places);
 	}
 
 	protected short op_set_font() {
 		/* TODO */
-		return ZNOTDONE;
+		return 0;
 	}
 
 	protected short op_save_undo() {
-		short result;
-
-		zm.zstack.push(new Integer(storevar));
-		result = (short) ((ZMachine5) zm).save_undo();
-		if (result == 0)
-			zm.zstack.pop();
-		return result;
+		return (short) -1;
 	}
 
 	protected short op_restore_undo() {
-		short result;
-
-		result = (short) ((ZMachine5) zm).restore_undo();
-		if (result != 0)
-			storevar = (short) ((Integer) zm.zstack.pop()).intValue();
-		return result;
+		return (short) -1;
 	}
 
 	protected void setupbs() {
-		/* Sets up store and branch instructions */
-		branch5[OP_JE] = true;
-		branch5[OP_JL] = true;
-		branch5[OP_JG] = true;
-		branch5[OP_DEC_CHK] = true;
-		branch5[OP_INC_CHK] = true;
-		branch5[OP_JIN] = true;
-		branch5[OP_TEST] = true;
+		int i;
+		for (i = 0; i < 285; i++) {
+			store5[i] = false;
+			branch5[i] = false;
+		}
 		store5[OP_OR] = true;
 		store5[OP_AND] = true;
-		branch5[OP_TEST_ATTR] = true;
 		store5[OP_LOADW] = true;
 		store5[OP_LOADB] = true;
 		store5[OP_GET_PROP] = true;
@@ -878,34 +866,43 @@ public class ZInstruction5 extends ZInstruction {
 		store5[OP_MUL] = true;
 		store5[OP_DIV] = true;
 		store5[OP_MOD] = true;
-		store5[OP_CALL_2S] = true;
-		branch5[OP_JZ] = true;
-		branch5[OP_GET_SIBLING] = true;
 		store5[OP_GET_SIBLING] = true;
-		branch5[OP_GET_CHILD] = true;
 		store5[OP_GET_CHILD] = true;
-		store5[OP_GET_PARENT] = true;
 		store5[OP_GET_PROP_LEN] = true;
-		store5[OP_CALL_1S] = true;
+		store5[OP_INC_CHK] = true;
+		store5[OP_DEC_CHK] = true;
 		store5[OP_LOAD] = true;
-		store5[OP_CATCH] = true;
-		branch5[OP_VERIFY] = true;
-		branch5[OP_PIRACY] = true;
-		store5[OP_CALL_VS] = true;
-		store5[OP_AREAD] = true;
 		store5[OP_RANDOM] = true;
+		store5[OP_CALL_2S] = true;
+		store5[OP_CALL_1S] = true;
+		store5[OP_CALL_VS] = true;
 		store5[OP_CALL_VS2] = true;
 		store5[OP_READ_CHAR] = true;
 		store5[OP_SCAN_TABLE] = true;
-		branch5[OP_SCAN_TABLE] = true;
 		store5[OP_NOT] = true;
-		branch5[OP_CHECK_ARG_COUNT] = true;
 		store5[OP_SAVE] = true;
 		store5[OP_RESTORE] = true;
 		store5[OP_LOG_SHIFT] = true;
 		store5[OP_ART_SHIFT] = true;
-		store5[OP_SET_FONT] = true;
+		store5[OP_CATCH] = true;
 		store5[OP_SAVE_UNDO] = true;
 		store5[OP_RESTORE_UNDO] = true;
+
+		branch5[OP_JE] = true;
+		branch5[OP_JL] = true;
+		branch5[OP_JG] = true;
+		branch5[OP_DEC_CHK] = true;
+		branch5[OP_INC_CHK] = true;
+		branch5[OP_JIN] = true;
+		branch5[OP_TEST] = true;
+		branch5[OP_TEST_ATTR] = true;
+		branch5[OP_JZ] = true;
+		branch5[OP_GET_SIBLING] = true;
+		branch5[OP_GET_CHILD] = true;
+		branch5[OP_VERIFY] = true;
+		branch5[OP_PIRACY] = true;
+		branch5[OP_SAVE] = true;
+		branch5[OP_RESTORE] = true;
+		branch5[OP_SCAN_TABLE] = true;
 	}
 }

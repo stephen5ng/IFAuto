@@ -5,8 +5,6 @@
 
 package com.example.ifauto.zengine;
 
-import de.onyxbits.textfiction.zengine.ZMachine;
-
 public abstract class ZObjectTree {
 	protected ZMachine zm;
 	protected int object_table;

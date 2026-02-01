@@ -29,6 +29,10 @@ public class ZState {
 
 		header = new ZStateHeader(zm.memory_image);
 		dyn_size = header.static_base();
+		if (dyn_size > zm.memory_image.length) {
+			dyn_size = zm.memory_image.length;
+		}
+		
 		/*
 		 * clones the stack but not the Integers within. Fortunately they are
 		 * immutable. But the arrays aren't, so don't mess with them
@@ -45,7 +49,7 @@ public class ZState {
 	}
 
 	public void restore_saved() {
-		System.arraycopy(dynamic, 0, zm.memory_image, 0, dynamic.length);
+		System.arraycopy(dynamic, 0, zm.memory_image, 0, Math.min(dynamic.length, zm.memory_image.length));
 		zm.locals = new short[locals.length];
 		System.arraycopy(locals, 0, zm.locals, 0, locals.length);
 		zm.zstack = (Stack) zstack.clone();
