@@ -13,14 +13,14 @@ class MyCarAppService : CarAppService() {
     }
 
     override fun onCreateSession(): Session {
-        Log.d("MyCarAppService", "onCreateSession called")
+        Log.d("IFAutoService", "onCreateSession: STARTING SESSION")
         return GameSession()
     }
 }
 
 class GameSession : Session() {
     override fun onCreateScreen(intent: Intent): Screen {
-        Log.d("MyCarAppService", "onCreateScreen called")
+        Log.d("IFAutoService", "onCreateScreen: CREATING GAMESCREEN")
         return GameScreen(carContext)
     }
 }

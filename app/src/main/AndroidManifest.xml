@@ -16,7 +16,7 @@
         android:theme="@style/Theme.InteractiveFictionAuto"
         tools:targetApi="31">
 
-        <!-- Main Service for Android Auto / AAOS -->
+        <!-- Main Service for Android Auto -->
         <service
             android:name=".MyCarAppService"
             android:exported="true">
@@ -24,28 +24,34 @@
                 <action android:name="androidx.car.app.CarAppService" />
                 <category android:name="androidx.car.app.category.NAVIGATION" />
             </intent-filter>
+            <!-- Points to the automotive descriptor for template support -->
             <meta-data
                 android:name="com.google.android.gms.car.application"
                 android:resource="@xml/automotive_app_desc" />
         </service>
 
-        <!-- Use the library's CarAppActivity directly as the launcher -->
+        <!-- Main Activity for phone -->
         <activity
-            android:name="androidx.car.app.activity.CarAppActivity"
-            android:exported="true"
-            android:theme="@style/Theme.InteractiveFictionAuto">
+            android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
 
+        <!-- Activity needed for car connection -->
+        <activity
+            android:name="androidx.car.app.activity.CarAppActivity"
+            android:exported="true"
+            android:theme="@style/Theme.InteractiveFictionAuto">
             <meta-data
                 android:name="androidx.car.app.CAR_APP_SERVICE"
                 android:value="com.example.ifauto.MyCarAppService" />
+            <meta-data
+                android:name="androidx.car.app.distractionOptimized"
+                android:value="true"/>
         </activity>
-
-        <!-- Added back to fix IDE Run Configuration errors -->
-        <activity android:name=".MainActivity" android:exported="true" />
 
         <meta-data
             android:name="androidx.car.app.minCarApiLevel"
