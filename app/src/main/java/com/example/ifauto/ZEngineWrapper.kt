@@ -110,4 +110,8 @@ class ZEngineWrapper(private val gameStream: InputStream) {
             false
         }
     }
+
+    fun getRoomId(): Int {
+        return machine?.get_variable(16.toShort())?.toInt() ?: -1
+    }
 }

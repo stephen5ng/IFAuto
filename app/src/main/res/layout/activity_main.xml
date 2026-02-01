@@ -5,19 +5,40 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <ScrollView
-        android:id="@+id/scrollView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/outputTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:fontFamily="monospace" />
-    </ScrollView>
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:padding="16dp"
+            android:background="@drawable/rounded_bg">
+
+            <TextView
+                android:id="@+id/outputTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Welcome via Z-Machine..."
+                android:textSize="18sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="monospace"
+                android:lineSpacingExtra="4dp" />
+        </ScrollView>
+
+        <com.example.ifauto.MinimapView
+            android:id="@+id/minimapView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/rounded_bg" />
+            
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

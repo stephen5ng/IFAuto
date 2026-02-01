@@ -3004,6 +3004,7 @@ drawable notification_template_icon_bg
 drawable notification_template_icon_low_bg
 drawable notification_tile_bg
 drawable notify_panel_notification_icon_bg
+drawable rounded_bg
 drawable test_level_drawable
 drawable tooltip_frame_dark
 drawable tooltip_frame_light
@@ -3255,6 +3256,7 @@ id message
 id micButton
 id middle
 id mini
+id minimapView
 id month_grid
 id month_navigation_bar
 id month_navigation_fragment_toggle

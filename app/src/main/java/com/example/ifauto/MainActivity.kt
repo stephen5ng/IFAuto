@@ -20,11 +20,13 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private lateinit var commandEditText: EditText
     private lateinit var micButton: Button
     private lateinit var scrollView: ScrollView
+    private lateinit var minimapView: MinimapView
     
     private var zEngine: ZEngineWrapper? = null
     private var tts: TextToSpeech? = null
     private var speechRecognizer: SpeechRecognizer? = null
     private var isListenting = false
+    private var lastMove: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +36,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         commandEditText = findViewById(R.id.commandEditText)
         micButton = findViewById(R.id.micButton)
         scrollView = findViewById(R.id.scrollView)
+        minimapView = findViewById(R.id.minimapView)
 
         tts = TextToSpeech(this, this)
         initZEngine()
@@ -41,6 +44,43 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         micButton.setOnClickListener { startListening() }
         setupActionButtons()
+    }
+    
+
+    private fun handleCommand(cmd: String) {
+        val command = cmd.trim()
+        if (command.isNotEmpty()) {
+            commandEditText.setText(command) 
+            appendOutput("\n> $command\n")
+            
+            // Heuristic to detect movement commands
+            if (isMoveCommand(command)) {
+                lastMove = command
+            } else {
+                lastMove = null // Don't map "inventory" as a move direction
+            }
+
+            zEngine?.input(command)
+            var output = zEngine?.run() ?: ""
+            output = cleanText(output)
+            appendOutput(output)
+            speak(output)
+            updateMap()
+            
+            val savePath = java.io.File(filesDir, "autosave.sav").absolutePath
+            zEngine?.saveGame(savePath)
+        }
+    }
+
+    private fun isMoveCommand(cmd: String): Boolean {
+        val c = cmd.lowercase()
+        return c in listOf("n", "north", "s", "south", "e", "east", "w", "west", 
+                          "ne", "nw", "se", "sw", "u", "up", "d", "down")
+    }
+
+    private fun updateMap() {
+        val roomId = zEngine?.getRoomId() ?: -1
+        minimapView.updateMap(roomId, lastMove)
     }
 
     private fun setupActionButtons() {
@@ -141,6 +181,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             output = cleanText(output)
             appendOutput(output)
             speak(output)
+            updateMap()
             
         } catch (e: Exception) {
             appendOutput("Error: ${e.message}")
@@ -153,23 +194,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         zEngine?.saveGame(savePath)
     }
 
-    private fun handleCommand(cmd: String) {
-        val command = cmd.trim()
-        if (command.isNotEmpty()) {
-            commandEditText.setText(command) // Show what was commanded
-            appendOutput("\n> $command\n")
-            
-            zEngine?.input(command)
-            var output = zEngine?.run() ?: ""
-            output = cleanText(output)
-            appendOutput(output)
-            speak(output)
-            
-            // Optional: Save after every move for robustness vs crashes
-            val savePath = java.io.File(filesDir, "autosave.sav").absolutePath
-            zEngine?.saveGame(savePath)
-        }
-    }
+
 
     private fun cleanText(text: String): String {
         // Z-Machine outputs hard line breaks (single \n) that brake words and TTS.
