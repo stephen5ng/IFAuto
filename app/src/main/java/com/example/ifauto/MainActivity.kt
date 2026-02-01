@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var lastMove: String? = null
     
     private var currentStory = "zork1.z3"
-    private val stories = listOf("zork1.z3", "lostpig.z8")
+    private val stories = listOf("zork1.z3", "hhgg.z3")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         val container = findViewById<android.widget.LinearLayout>(R.id.actionButtonsContainer)
         for (i in 0 until container.childCount) {
             val view = container.getChildAt(i)
-            if (view is Button) {
+            if (view is Button && view.id != R.id.switchGameButton) {
                 view.setOnClickListener { 
                     handleCommand(view.text.toString()) 
                 }
