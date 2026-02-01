@@ -1,0 +1,19 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+# Ignore game files as they are often non-free or huge
+app/src/main/assets/*.z3
+app/src/main/assets/*.z5
+app/src/main/assets/*.z8
