@@ -148,9 +148,13 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private fun cleanText(text: String): String {
         // Z-Machine outputs hard line breaks (single \n) that brake words and TTS.
         // We preserve double newlines (\n\n) as paragraph breaks.
+        // We also remove the '>' prompt so TTS doesn't say "Greater Than".
         val paragraphs = text.split("\n\n")
         return paragraphs.joinToString("\n\n") { p ->
-            p.replace("\n", " ").replace("\\s+".toRegex(), " ").trim()
+            p.replace(">", "")
+             .replace("\n", " ")
+             .replace("\\s+".toRegex(), " ")
+             .trim()
         }
     }
 
