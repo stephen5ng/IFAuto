@@ -23,29 +23,31 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:gravity="center_vertical"
         android:layout_marginTop="8dp">
+
+        <Button
+            android:id="@+id/micButton"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:text="🎤"
+            android:textSize="24sp"
+            android:layout_marginEnd="16dp"/>
 
         <EditText
             android:id="@+id/commandEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Type command..."
-            android:inputType="text"
-            android:imeOptions="actionSend" />
+            android:hint="Waiting for command..."
+            android:inputType="none"
+            android:focusable="false"
+            android:clickable="false"
+            android:longClickable="false"
+            android:background="@null"
+            android:textSize="18sp"
+            android:fontFamily="monospace"/>
 
-        <Button
-            android:id="@+id/micButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="🎤"
-            android:layout_marginEnd="8dp"/>
-
-        <Button
-            android:id="@+id/sendButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Send" />
     </LinearLayout>
 
 </LinearLayout>

@@ -13,7 +13,6 @@ id commandEditText
 id micButton
 id outputTextView
 id scrollView
-id sendButton
 layout activity_main
 mipmap ic_launcher
 mipmap ic_launcher_round

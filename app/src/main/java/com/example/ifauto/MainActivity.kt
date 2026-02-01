@@ -18,7 +18,6 @@ import java.util.Locale
 class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private lateinit var outputTextView: TextView
     private lateinit var commandEditText: EditText
-    private lateinit var sendButton: Button
     private lateinit var micButton: Button
     private lateinit var scrollView: ScrollView
     
@@ -33,7 +32,6 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         outputTextView = findViewById(R.id.outputTextView)
         commandEditText = findViewById(R.id.commandEditText)
-        sendButton = findViewById(R.id.sendButton)
         micButton = findViewById(R.id.micButton)
         scrollView = findViewById(R.id.scrollView)
 
@@ -41,17 +39,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         initZEngine()
         checkPermissionsAndSetupMic()
 
-        sendButton.setOnClickListener { handleCommand() }
         micButton.setOnClickListener { startListening() }
-
-        commandEditText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_SEND) {
-                handleCommand()
-                true
-            } else {
-                false
-            }
-        }
     }
 
     private fun checkPermissionsAndSetupMic() {
