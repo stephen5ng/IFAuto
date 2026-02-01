@@ -120,15 +120,37 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         try {
             val stream = assets.open("zork1.z3")
             zEngine = ZEngineWrapper(stream)
-            if (zEngine?.isRunning() == true) {
-                var intro = zEngine?.run() ?: ""
-                intro = cleanText(intro)
-                appendOutput(intro)
-                speak(intro)
+            
+            val savePath = java.io.File(filesDir, "autosave.sav").absolutePath
+            val saveFile = java.io.File(savePath)
+
+            var output = ""
+            if (saveFile.exists()) {
+                if (zEngine?.restoreGame(savePath) == true) {
+                    appendOutput("\n(Restored Session)\n")
+                    // Inject "Look" so the user sees where they are
+                    zEngine?.input("Look") 
+                    output = zEngine?.run() ?: ""
+                } else {
+                     output = zEngine?.run() ?: ""
+                }
+            } else {
+                 output = zEngine?.run() ?: ""
             }
+
+            output = cleanText(output)
+            appendOutput(output)
+            speak(output)
+            
         } catch (e: Exception) {
             appendOutput("Error: ${e.message}")
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        val savePath = java.io.File(filesDir, "autosave.sav").absolutePath
+        zEngine?.saveGame(savePath)
     }
 
     private fun handleCommand(cmd: String) {
@@ -142,6 +164,10 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             output = cleanText(output)
             appendOutput(output)
             speak(output)
+            
+            // Optional: Save after every move for robustness vs crashes
+            val savePath = java.io.File(filesDir, "autosave.sav").absolutePath
+            zEngine?.saveGame(savePath)
         }
     }
 

@@ -82,4 +82,32 @@ class ZEngineWrapper(private val gameStream: InputStream) {
     fun isRunning(): Boolean {
         return machine != null
     }
+
+    fun saveGame(path: String) {
+        if (machine == null) return
+        try {
+            val saver = ZState(machine)
+            saver.disk_save(path, machine!!.pc)
+            Log.d("ZEngineWrapper", "Saved state to $path")
+        } catch (e: Exception) {
+            Log.e("ZEngineWrapper", "Failed to save game", e)
+        }
+    }
+
+    fun restoreGame(path: String): Boolean {
+        if (machine == null) return false
+        return try {
+            val loader = ZState(machine)
+            if (loader.restore_from_disk(path)) {
+                loader.restore_saved()
+                Log.d("ZEngineWrapper", "Restored state from $path")
+                true
+            } else {
+                false
+            }
+        } catch (e: Exception) {
+            Log.e("ZEngineWrapper", "Failed to restore game", e)
+            false
+        }
+    }
 }
