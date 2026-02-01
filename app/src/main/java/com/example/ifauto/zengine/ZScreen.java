@@ -86,7 +86,7 @@ public class ZScreen {
 	public int cursor=0;
 
 	public ZScreen() {
-		chars = 80;
+		chars = 800; // Increased to 800 to effectively disable hard wrapping
 		lines = 80;
 	}
 

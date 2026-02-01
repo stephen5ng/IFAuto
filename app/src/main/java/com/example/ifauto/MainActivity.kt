@@ -123,7 +123,8 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             val stream = assets.open("zork1.z3")
             zEngine = ZEngineWrapper(stream)
             if (zEngine?.isRunning() == true) {
-                val intro = zEngine?.run() ?: ""
+                var intro = zEngine?.run() ?: ""
+                intro = cleanText(intro)
                 appendOutput(intro)
                 speak(intro)
             }
@@ -139,9 +140,19 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             commandEditText.text.clear()
             
             zEngine?.input(command)
-            val output = zEngine?.run() ?: ""
+            var output = zEngine?.run() ?: ""
+            output = cleanText(output)
             appendOutput(output)
             speak(output)
+        }
+    }
+
+    private fun cleanText(text: String): String {
+        // Z-Machine outputs hard line breaks (single \n) that brake words and TTS.
+        // We preserve double newlines (\n\n) as paragraph breaks.
+        val paragraphs = text.split("\n\n")
+        return paragraphs.joinToString("\n\n") { p ->
+            p.replace("\n", " ").replace("\\s+".toRegex(), " ").trim()
         }
     }
 

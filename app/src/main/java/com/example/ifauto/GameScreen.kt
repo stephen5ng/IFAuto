@@ -203,7 +203,8 @@ class GameScreen(carContext: CarContext) : Screen(carContext), TextToSpeech.OnIn
         val params = Bundle()
         params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, utteranceId)
         
-        tts?.speak(text, TextToSpeech.QUEUE_FLUSH, params, utteranceId)
+        val cleanText = text.replace("\n", " ").replace("\\s+".toRegex(), " ")
+        tts?.speak(cleanText, TextToSpeech.QUEUE_FLUSH, params, utteranceId)
     }
 
     private fun processCommand(command: String) {

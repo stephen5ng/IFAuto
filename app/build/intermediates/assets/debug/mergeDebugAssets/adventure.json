@@ -1,0 +1,168 @@
+{
+  "title": "Zork: Auto Edition (Stateful)",
+  "startRoomId": "west_of_house",
+  "rooms": {
+    "west_of_house": {
+      "id": "west_of_house",
+      "text": "You are standing in an open field west of a white house, with a boarded front door. There is a small mailbox here.",
+      "choices": [
+        {
+          "label": "Open Mailbox",
+          "nextRoomId": "mailbox_view",
+          "aliases": [
+            "open mailbox",
+            "check mail"
+          ],
+          "requirements": [
+            {
+              "flag": "mailbox_open",
+              "value": false
+            }
+          ]
+        },
+        {
+          "label": "Close Mailbox",
+          "nextRoomId": "west_of_house",
+          "aliases": [
+            "close mailbox"
+          ],
+          "requirements": [
+            {
+              "flag": "mailbox_open",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "flag": "mailbox_open",
+              "value": false
+            }
+          ],
+          "overrideText": "You close the mailbox."
+        },
+        {
+          "label": "Look in Mailbox",
+          "nextRoomId": "mailbox_view",
+          "requirements": [
+            {
+              "flag": "mailbox_open",
+              "value": true
+            }
+          ]
+        },
+        {
+          "label": "Go North",
+          "nextRoomId": "north_of_house",
+          "aliases": [
+            "north",
+            "go north"
+          ]
+        },
+        {
+          "label": "Go South",
+          "nextRoomId": "forest_south",
+          "aliases": [
+            "south",
+            "go south"
+          ]
+        }
+      ]
+    },
+    "mailbox_view": {
+      "id": "mailbox_view",
+      "text": "Opening the small mailbox reveals a leaflet.",
+      "choices": [
+        {
+          "label": "Read Leaflet",
+          "nextRoomId": "west_of_house",
+          "overrideText": "The leaflet says: 'WELCOME TO ZORK! This is a demo of the Android Auto Interactive Fiction engine.'",
+          "aliases": [
+            "read",
+            "read leaflet"
+          ],
+          "effects": [
+            {
+              "flag": "mailbox_open",
+              "value": true
+            }
+          ]
+        },
+        {
+          "label": "Take Leaflet",
+          "nextRoomId": "west_of_house",
+          "effects": [
+            {
+              "flag": "has_leaflet",
+              "value": true
+            },
+            {
+              "flag": "mailbox_open",
+              "value": true
+            }
+          ],
+          "overrideText": "Taken."
+        },
+        {
+          "label": "Back",
+          "nextRoomId": "west_of_house",
+          "aliases": [
+            "close it",
+            "back"
+          ],
+          "effects": [
+            {
+              "flag": "mailbox_open",
+              "value": true
+            }
+          ]
+        }
+      ]
+    },
+    "north_of_house": {
+      "id": "north_of_house",
+      "text": "You are facing the north side of a white house. There is no door here, and all the windows are boarded up.",
+      "choices": [
+        {
+          "label": "Go West",
+          "nextRoomId": "west_of_house",
+          "aliases": [
+            "west"
+          ]
+        }
+      ]
+    },
+    "forest_south": {
+      "id": "forest_south",
+      "text": "This is a forest, with trees in all directions. To the east, there appears to be sunlight.",
+      "choices": [
+        {
+          "label": "Go North",
+          "nextRoomId": "west_of_house",
+          "aliases": [
+            "north"
+          ]
+        },
+        {
+          "label": "Go East",
+          "nextRoomId": "clearing",
+          "aliases": [
+            "east"
+          ]
+        }
+      ]
+    },
+    "clearing": {
+      "id": "clearing",
+      "text": "You are in a clearing, with a pile of leaves on the ground.",
+      "choices": [
+        {
+          "label": "Go West",
+          "nextRoomId": "forest_south",
+          "aliases": [
+            "west"
+          ]
+        }
+      ]
+    }
+  }
+}
