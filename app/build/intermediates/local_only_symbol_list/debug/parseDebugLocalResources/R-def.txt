@@ -9,6 +9,7 @@ color teal_700
 color white
 drawable ic_launcher_foreground
 drawable ic_mic
+id actionButtonsContainer
 id commandEditText
 id micButton
 id outputTextView

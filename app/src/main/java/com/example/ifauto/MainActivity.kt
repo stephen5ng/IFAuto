@@ -40,6 +40,19 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         checkPermissionsAndSetupMic()
 
         micButton.setOnClickListener { startListening() }
+        setupActionButtons()
+    }
+
+    private fun setupActionButtons() {
+        val container = findViewById<android.widget.LinearLayout>(R.id.actionButtonsContainer)
+        for (i in 0 until container.childCount) {
+            val view = container.getChildAt(i)
+            if (view is Button) {
+                view.setOnClickListener { 
+                    handleCommand(view.text.toString()) 
+                }
+            }
+        }
     }
 
     private fun checkPermissionsAndSetupMic() {
@@ -81,10 +94,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 override fun onResults(results: Bundle?) {
                     val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
                     if (!matches.isNullOrEmpty()) {
-                        commandEditText.setText(matches[0])
-                        // Don't auto-send, let user confirm or just edit? 
-                        // Actually for a game "North" should just send.
-                        handleCommand()
+                        handleCommand(matches[0])
                     }
                 }
                 override fun onPartialResults(partialResults: Bundle?) {}
@@ -121,11 +131,11 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
-    private fun handleCommand() {
-        val command = commandEditText.text.toString().trim()
+    private fun handleCommand(cmd: String) {
+        val command = cmd.trim()
         if (command.isNotEmpty()) {
+            commandEditText.setText(command) // Show what was commanded
             appendOutput("\n> $command\n")
-            commandEditText.text.clear()
             
             zEngine?.input(command)
             var output = zEngine?.run() ?: ""
