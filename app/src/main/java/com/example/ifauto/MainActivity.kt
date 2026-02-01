@@ -220,10 +220,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             tts?.setOnUtteranceProgressListener(object : android.speech.tts.UtteranceProgressListener() {
                 override fun onStart(utteranceId: String?) {}
                 override fun onDone(utteranceId: String?) {
-                    // Auto-listen after speaking
-                    if (utteranceId == "GameResponse") {
-                        runOnUiThread { startListening() }
-                    }
+                    // Auto-listening disabled by user request.
                 }
                 override fun onError(utteranceId: String?) {}
             })
